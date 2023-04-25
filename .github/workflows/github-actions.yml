@@ -1,14 +1,13 @@
 name: Python CI
 
-on:
-  - push
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.11.3]
+        python-version: [3.11]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -22,9 +21,10 @@ jobs:
           make install
       - name: Run linter and pytest
         run: |
-          make check
+          make lint
+          make test
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: Midnight95/codeclimate-action@v3.2.0
         if: github.ref_name == 'main'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
