@@ -1,16 +1,17 @@
-import json
+from gendiff.parser import parse_extensions
 
 
 def lower_bool(_dict):
     for key, value in _dict.items():
         if isinstance(value, bool):
             _dict[key] = str(value).lower()
-    return _dict
 
 
 def generate_diff(first_file: str, second_file: str) -> list:
-    first_file = lower_bool(json.load(open(first_file)))
-    second_file = lower_bool(json.load(open(second_file)))
+    first_file, second_file = parse_extensions(first_file, second_file)
+
+    lower_bool(first_file)
+    lower_bool(second_file)
 
     result = ['{']
     unique = object()
