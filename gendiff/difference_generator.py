@@ -20,7 +20,11 @@ def find_diff(first_file: dict, second_file: dict) -> dict:
     for key in sorted(keys):
         first_value = first_file.get(key, unique)
         second_value = second_file.get(key, unique)
-        if first_value == second_value:
+
+        if all(map(lambda x: is_dict(x), (first_value, second_value))):
+            result[f'    {key}'] = find_diff(first_value, second_value)
+
+        elif first_value == second_value:
             result[f'    {key}'] = first_value
         elif second_value is unique:
             result[f'  - {key}'] = first_value
@@ -39,8 +43,7 @@ def generate_diff(first_file: str, second_file: str) -> str:
     lower_bool(second_file)
 
     def stringify(item, depth):
-        """Are you talking to me?"""
-        spaces = ' ' * depth
+        spaces = '*' * depth * 4
         result = '\n'
         for key, val in item.items():
             if is_dict(val):
@@ -50,4 +53,4 @@ def generate_diff(first_file: str, second_file: str) -> str:
                 result += f'{spaces}{key}: {val}\n'
         return result
 
-    return '{' + stringify(find_diff(first_file, second_file), 1) + '}'
+    return '{' + stringify(find_diff(first_file, second_file), 0) + '}'
