@@ -35,12 +35,10 @@ def make_diff(first_item: dict, second_item: dict) -> dict:
     for key in sorted(keys):
         first_value = first_item.get(key) if is_dict(first_item) else None
         second_value = second_item.get(key) if is_dict(second_item) else None
-        #косяк
-        if all(map(lambda x: is_dict(x), (first_value, second_value))):
+
+        if any(map(lambda x: is_dict(x), (first_value, second_value))):
             result[f'    {key}'] = make_diff(first_value, second_value)
-        elif any(map(lambda x: is_dict(x), (first_value, second_value))):
-            result[f'  * {key}'] = first_value if first_value else second_value
-        #косяк
+
         elif first_value == second_value:
             result[f'    {key}'] = first_value
         elif second_value is None:
