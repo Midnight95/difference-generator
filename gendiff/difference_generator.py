@@ -5,13 +5,15 @@ def is_dict(item):
     return isinstance(item, dict)
 
 
-def lower_bools(item):
+def update_values(item):
     if is_dict(item):
         for key, value in item.items():
             if isinstance(value, bool):
                 item[key] = str(value).lower()
+            elif isinstance(value, type(None)):
+                item[key] = 'null'
             if is_dict(value):
-                lower_bools(value)
+                update_values(value)
 
 
 def get_keys(first_item, second_item):
@@ -21,29 +23,29 @@ def get_keys(first_item, second_item):
         keys = set(first_item.keys())
     else:
         keys = set(second_item.keys())
-
     return keys
 
 
 def make_diff(first_item: dict, second_item: dict) -> dict:
 
     result = {}
-    unique = object()
 
     keys = get_keys(first_item, second_item)
 
     for key in sorted(keys):
-        first_value = first_item.get(key, unique) if is_dict(first_item) else unique
-        second_value = second_item.get(key, unique) if is_dict(second_item) else unique
-
-        if any(map(lambda x: is_dict(x), (first_value, second_value))):
+        first_value = first_item.get(key) if is_dict(first_item) else None
+        second_value = second_item.get(key) if is_dict(second_item) else None
+        #косяк
+        if all(map(lambda x: is_dict(x), (first_value, second_value))):
             result[f'    {key}'] = make_diff(first_value, second_value)
-
+        elif any(map(lambda x: is_dict(x), (first_value, second_value))):
+            result[f'  * {key}'] = first_value if first_value else second_value
+        #косяк
         elif first_value == second_value:
             result[f'    {key}'] = first_value
-        elif second_value is unique:
+        elif second_value is None:
             result[f'  - {key}'] = first_value
-        elif first_value is unique:
+        elif first_value is None:
             result[f'  + {key}'] = second_value
         else:
             result[f'  - {key}'] = first_value
@@ -54,11 +56,11 @@ def make_diff(first_item: dict, second_item: dict) -> dict:
 def generate_diff(first_file: str, second_file: str) -> str:
     first_file, second_file = parse_extensions(first_file, second_file)
 
-    lower_bools(first_file)
-    lower_bools(second_file)
+    update_values(first_file)
+    update_values(second_file)
 
     def stringify(item, depth):
-        spaces = ' ' * 4
+        spaces = '   '
         result = '\n'
         for key, val in item.items():
             if is_dict(val):
