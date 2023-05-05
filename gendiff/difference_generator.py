@@ -1,6 +1,5 @@
 from gendiff.parser import parse_extensions
 
-
 def lower_bool(_dict):
     for key, value in _dict.items():
         if isinstance(value, bool):
@@ -8,10 +7,13 @@ def lower_bool(_dict):
 
 
 def is_dict(item):
-    return isinstance(item, dict)
+    return item if isinstance(item, dict) else {}
 
 
-def find_diff(first_file: dict, second_file: dict) -> dict:
+def make_diff(first_file: dict, second_file: dict) -> dict:
+
+    lower_bool(first_file)
+    lower_bool(second_file)
 
     result = {}
     unique = object()
@@ -21,11 +23,11 @@ def find_diff(first_file: dict, second_file: dict) -> dict:
         first_value = first_file.get(key, unique)
         second_value = second_file.get(key, unique)
 
-        if all(map(lambda x: is_dict(x), (first_value, second_value))):
-            result[f'    {key}'] = find_diff(first_value, second_value)
+        if any(map(lambda x: is_dict(x), (first_value, second_value))):
+            result[f'   {key}'] = make_diff(is_dict(first_value), is_dict(second_value))
 
         elif first_value == second_value:
-            result[f'    {key}'] = first_value
+            result[f'  + {key}'] = first_value
         elif second_value is unique:
             result[f'  - {key}'] = first_value
         elif first_value is unique:
@@ -39,18 +41,28 @@ def find_diff(first_file: dict, second_file: dict) -> dict:
 def generate_diff(first_file: str, second_file: str) -> str:
     first_file, second_file = parse_extensions(first_file, second_file)
 
-    lower_bool(first_file)
-    lower_bool(second_file)
-
     def stringify(item, depth):
-        spaces = '*' * depth * 4
+        spaces = ' ' * 4
         result = '\n'
         for key, val in item.items():
             if is_dict(val):
                 result += f'{spaces}{key}: ' \
-                          f'{{{stringify(val, depth + 1)}{spaces}}}\n'
+                          f'{{{stringify(val, depth + 1)}{spaces * (depth + 2)}}}\n'
             else:
-                result += f'{spaces}{key}: {val}\n'
+                result += f'{spaces * depth}{key}: {val}\n'
         return result
 
-    return '{' + stringify(find_diff(first_file, second_file), 0) + '}'
+    return '{' + stringify(make_diff(first_file, second_file), -1) + '}'
+
+
+# Нужно добавить условие, чтобы не
+first_file = '/home/kenny/dev/python-project-50/tests/fixtures/nested1.json'
+second_file = '/home/kenny/dev/python-project-50/tests/fixtures/nested2.json'
+
+first_file, second_file = parse_extensions(first_file, second_file)
+
+print(make_diff(first_file, second_file))
+
+first_file = '/home/kenny/dev/python-project-50/tests/fixtures/nested1.json'
+second_file = '/home/kenny/dev/python-project-50/tests/fixtures/nested2.json'
+print(generate_diff(first_file, second_file))
