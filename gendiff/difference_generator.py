@@ -62,13 +62,13 @@ def generate_diff(first_file: str, second_file: str) -> str:
         result = '\n'
         for key, val in item.items():
             if is_dict(val):
-                result += f'{spaces}{key}: ' \
-                          f'{{{stringify(val, depth + 1)}{spaces * (depth + 2)}}}\n'
+                result += f'{spaces * depth}{key}: ' \
+                          f'{{{stringify(val, depth + 1)}{spaces * (depth + 1)}}}\n'
             else:
                 result += f'{spaces * depth}{key}: {val}\n'
         return result
 
-    return '{' + stringify(make_diff(first_file, second_file), -1) + '}'
+    return '{' + stringify(make_diff(first_file, second_file), 0) + '}'
 
 
 # # Нужно добавить условие, чтобы не
