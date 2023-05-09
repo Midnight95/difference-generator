@@ -1,4 +1,4 @@
-def stylish(_dict):
+def gen_dict_string(_dict):
     def _iter(item, depth):
         spaces = 4 * ' '
         result = '\n'
