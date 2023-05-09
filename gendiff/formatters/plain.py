@@ -23,9 +23,6 @@ def generate_removed_or_removed(key, path, value, _dict):
         return f"Property '{path}{key[4:]}' was removed\n"
 
 
-
-
-
 def gen_plain_string(_dict):
     result = ''
     removed, added = CHANGE_INDICATORS
