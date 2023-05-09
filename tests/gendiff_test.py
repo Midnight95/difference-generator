@@ -51,6 +51,6 @@ def test_plain():
 
 
 def test_plain_nested():
-    assert RIGHT_PLAIN == gen_plain_string(generate_diff(
+    assert RIGHT_PLAIN_NESTED == gen_plain_string(generate_diff(
         'tests/fixtures/nested1.json', 'tests/fixtures/nested2.json')
     )
