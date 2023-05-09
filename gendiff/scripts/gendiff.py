@@ -14,6 +14,5 @@ def main():
     print(format_diff(diff))
 
 
-
 if __name__ == '__main__':
     main()
