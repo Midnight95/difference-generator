@@ -10,7 +10,7 @@ FORMATTERS = {
 }
 
 
-def generate_diff(first_file: str, second_file: str) -> dict:  # добавить третий ключ
+def generate_diff(first_file: str, second_file: str) -> dict:
     first_file, second_file = parse_extensions(first_file, second_file)
 
     return build_diff(first_file, second_file)

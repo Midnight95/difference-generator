@@ -1,3 +1,5 @@
+from gendiff.selectors import is_dict
+
 
 def normalize(item):
     for key, value in item.items():
@@ -9,11 +11,11 @@ def normalize(item):
             normalize(value)
 
 
-def is_dict(item):
-    return isinstance(item, dict)
-
-
 def get_keys(first_item, second_item) -> set:
+    """
+    Returns the key set of two input values
+        while checking if they are dictionaries
+    """
     if is_dict(first_item) and is_dict(second_item):
         keys = first_item.keys() | second_item.keys()
     elif is_dict(first_item):
@@ -23,7 +25,7 @@ def get_keys(first_item, second_item) -> set:
     return keys
 
 
-def build_diff(first_item: dict, second_item: dict) -> dict: #
+def build_diff(first_item: dict, second_item: dict) -> dict:
     unique = object
     result = {}
     keys = get_keys(first_item, second_item)

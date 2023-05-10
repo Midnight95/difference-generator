@@ -1,3 +1,24 @@
+from gendiff.selectors import *
+
+CHANGE_IND = {'removed': '  - ',
+              'added': '  + ',
+              'unchanged': '    '
+              }
+
+
+def make_value(key, value):
+    if not is_dict(value):
+        return key, value
+
+    if was_marked(value):
+        if get_status(value) in CHANGE_IND.values():
+            return f'{get_status(value)}{key}'
+
+
+
+
+
+
 def gen_dict_string(_dict):
     def _iter(item, depth):
         spaces = 4 * ' '
