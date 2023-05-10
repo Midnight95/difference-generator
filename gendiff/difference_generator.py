@@ -1,18 +1,16 @@
-from gendiff.parser import parse_extensions
 
-
-def is_dict(item):
-    return isinstance(item, dict)
-
-
-def stringify_values(item):
+def normalize(item):
     for key, value in item.items():
         if isinstance(value, bool):
             item[key] = str(value).lower()
         elif isinstance(value, type(None)):
             item[key] = 'null'
         if is_dict(value):
-            stringify_values(value)
+            normalize(value)
+
+
+def is_dict(item):
+    return isinstance(item, dict)
 
 
 def get_keys(first_item, second_item) -> set:
@@ -25,57 +23,45 @@ def get_keys(first_item, second_item) -> set:
     return keys
 
 
-def add_spaces(_dict: dict) -> dict:
-    result = {}
-    for key, value in _dict.items():
-        result[f'    {key}'] = value
-        if is_dict(value):
-            add_spaces(value)
-
-    return result
-
-
-def _iter(first_item: dict, second_item: dict) -> dict: # noqa 901
-
+def build_diff(first_item: dict, second_item: dict) -> dict: #
+    unique = object
     result = {}
     keys = get_keys(first_item, second_item)
 
-    for key in sorted(keys):
-        first_value = first_item.get(key) if is_dict(first_item) else None
-        second_value = second_item.get(key) if is_dict(second_item) else None
+    for key in keys:
+        first_value = first_item.get(key, unique)
+        second_value = second_item.get(key, unique)
 
         if is_dict(first_value) and is_dict(second_value):
-            result[f'    {key}'] = _iter(first_value, second_value)
+            result[key] = build_diff(first_value, second_value)
+
         # Only first value is present
-        elif second_value is None:
-            if is_dict(first_value):
-                result[f'  - {key}'] = add_spaces(first_value)
-            else:
-                result[f'  - {key}'] = first_value
+        elif second_value is unique:
+            result[key] = {
+                'value': first_value,
+                'status': 'removed'
+            }
+
         # Only second value is present
-        elif first_value is None:
-            if is_dict(second_value):
-                result[f'  + {key}'] = add_spaces(second_value)
-            else:
-                result[f'  + {key}'] = second_value
+        elif first_value is unique:
+            result[key] = {
+                'value': second_value,
+                'status': 'added'
+            }
+
         # Both values are present and identical
         elif first_value == second_value:
-            if is_dict(first_value):
-                result[f'    {key}'] = _iter(first_value, second_value)
-            else:
-                result[f'    {key}'] = first_value
+            result[key] = {
+                'value': first_value,
+                'status': 'unchanged'
+            }
+
         # Both values are present but different
         else:
-            result[f'  - {key}'] = first_value
-            result[f'  + {key}'] = second_value
+            result[key] = {
+                'old': first_value,
+                'new': second_value,
+                'status': 'updated'
+            }
 
     return result
-
-
-def generate_diff(first_file: str, second_file: str) -> dict:
-    first_file, second_file = parse_extensions(first_file, second_file)
-
-    stringify_values(first_file)
-    stringify_values(second_file)
-
-    return _iter(first_file, second_file)

@@ -1,27 +1,7 @@
 from gendiff.difference_generator import generate_diff
 from gendiff.formatters.stylish import gen_dict_string
 from gendiff.formatters.plain import gen_plain_string
-from tests.fixtures.right_result import RIGHT_RESULT, RIGHT_NESTED, RIGHT_STYLISH, RIGHT_STYLISH_NESTED, RIGHT_PLAIN, RIGHT_PLAIN_NESTED
-
-
-
-# Dictionary tests
-def test_gendiff_json():
-    assert RIGHT_RESULT == generate_diff(
-        'tests/fixtures/file1.json', 'tests/fixtures/file2.json'
-    )
-
-
-def test_gendiff_yml():
-    assert RIGHT_RESULT == generate_diff(
-        'tests/fixtures/file1.yaml', 'tests/fixtures/file2.yml'
-    )
-
-
-def test_gendiff_nested():
-    assert RIGHT_NESTED == generate_diff(
-        'tests/fixtures/nested1.json', 'tests/fixtures/nested2.json'
-    )
+from tests.fixtures.right_result import RIGHT_STYLISH, RIGHT_STYLISH_NESTED, RIGHT_PLAIN, RIGHT_PLAIN_NESTED
 
 
 # Stylish tests
