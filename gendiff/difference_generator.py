@@ -35,7 +35,10 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
         second_value = second_item.get(key, unique)
 
         if is_dict(first_value) and is_dict(second_value):
-            result[key] = build_diff(first_value, second_value)
+            result[key] = {
+                'value': build_diff(first_value, second_value),
+                'status': 'nested'
+            }
 
         # Only first value is present
         elif second_value is unique:
