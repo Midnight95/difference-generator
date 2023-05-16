@@ -1,4 +1,5 @@
-from gendiff.selectors import is_dict
+def is_dict(item):
+    return isinstance(item, dict)
 
 
 def normalize(item):

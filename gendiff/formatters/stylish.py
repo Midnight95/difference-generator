@@ -1,33 +1,37 @@
-from gendiff.selectors import *
+def make_value(data, depth: int) -> str:
+    if not isinstance(data, dict):
+        return data
 
-CHANGE_IND = {'removed': '  - ',
-              'added': '  + ',
-              'unchanged': '    '
-              }
+    res = '{'
+    for key, value in data:
+        res += f'\n{"    " * depth}{key}: {make_value(value, depth+1)}'
+        res += f'\n{"    " * (depth - 1)}}}'
 
-
-def make_value(key, value):
-    if not is_dict(value):
-        return key, value
-
-    if was_marked(value):
-        if get_status(value) in CHANGE_IND.values():
-            return f'{get_status(value)}{key}'
-
-
-
-
+    return res
 
 
 def gen_dict_string(_dict):
-    def _iter(item, depth):
-        spaces = 4 * ' '
+
+    INDICATORS = {
+        'added': '  - ',
+        'removed': '  + '
+    }
+
+    def _iter(item, depth=1):
         result = '\n'
+
         for key, val in item.items():
-            if isinstance(val, dict):
-                result += f'{spaces * depth}{key}: ' \
-                          f'{{{_iter(val, depth + 1)}{spaces * (depth + 1)}}}\n'
+            status = val.get('status')
+
+            if status == 'changed':
+                result += f'\n{key}: {make_value(val["old"], depth + 1)}'
+                result += val['new']
+
+
+            elif isinstance(val, dict):
+                result += f'{"    " * depth}{key}: ' \
+                          f'{{{_iter(val, depth + 1)}{"    " * (depth + 1)}}}\n'
             else:
-                result += f'{spaces * depth}{key}: {val}\n'
+                result += f'{"    " * depth}{key}: {val}\n'
         return result
     return '{' + _iter(_dict, 0) + '}'
