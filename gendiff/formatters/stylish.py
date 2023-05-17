@@ -43,4 +43,9 @@ def _iter(item, depth):
 
 
 def make_dict_string(_dict):
-    return f'{{\n{_iter(_dict, 0)}}}'
+    result = f'{{\n{_iter(_dict, 0)}}}'
+
+    for _ in range(result.count(' \n')):
+        result = result.replace(' \n', '\n')
+
+    return result
