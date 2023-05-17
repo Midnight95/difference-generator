@@ -42,10 +42,13 @@ def _iter(item, depth):
     return result
 
 
+def trim_whitespaces(string: str):
+    for _ in range(string.count(' \n')):
+        string = string.replace(' \n', '\n')
+
+    return string
+
+
 def make_dict_string(_dict):
-    result = f'{{\n{_iter(_dict, 0)}}}'
-
-    for _ in range(result.count(' \n')):
-        result = result.replace(' \n', '\n')
-
-    return result
+    result = trim_whitespaces(_iter(_dict, 0))
+    return f'{{\n{result}}}'
