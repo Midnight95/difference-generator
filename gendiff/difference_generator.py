@@ -1,5 +1,6 @@
 from gendiff.formatters.stylish import make_dict_string
 from gendiff.formatters.plain import gen_plain_string
+from parser import load_files
 
 
 def is_dict(item):
@@ -84,7 +85,7 @@ def generate_diff(old, new, formatter):
         'plain': gen_plain_string
     }
 
-    _dict = build_diff(old, new)
+    _dict = build_diff(*load_files(old, new))
     normalize(_dict)
 
     method = formatters.get(formatter, make_dict_string)
