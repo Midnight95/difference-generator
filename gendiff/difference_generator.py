@@ -1,6 +1,6 @@
 from gendiff.formatters.stylish import make_dict_string
 from gendiff.formatters.plain import gen_plain_string
-from parser import load_files
+from gendiff.parser import load_files
 
 
 def is_dict(item):
