@@ -19,7 +19,7 @@ def normalize(item):
 def get_keys(first_item, second_item) -> set:
     """
     Returns the key set of two input values
-        while checking if they are dictionaries
+        simultaneously checking if they are dictionaries
     """
     if is_dict(first_item) and is_dict(second_item):
         keys = first_item.keys() | second_item.keys()
