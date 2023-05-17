@@ -10,7 +10,6 @@ linear_yaml_2 = 'tests/fixtures/file2.yml'
 nested_json_1 = 'tests/fixtures/nested1.json'
 nested_json_2 = 'tests/fixtures/nested2.json'
 
-
 linear = 'tests/fixtures/linear'
 stylish = 'tests/fixtures/nested_stylish'
 plain = 'tests/fixtures/nested_plain'
