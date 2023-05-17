@@ -1,5 +1,6 @@
 import pytest
-
+import json
+import yaml
 from gendiff.difference_generator import generate_diff
 
 linear_json_1 = 'tests/fixtures/file1.json'
@@ -20,5 +21,7 @@ stylish = 'tests/fixtures/nested_stylish'
                                                                  (nested_json_1, nested_json_2, 'stylish', stylish)]
                          )
 def test_generate_diff(path1, path2, format_name, expected):
-    with open(expected) as f:
-        assert generate_diff(path1, path2, format_name) == f.read()
+    with open(path1) as f1, open(path2) as f2, open(expected) as f:
+        old = json.load(f1) if path1.endswith('.json') else yaml.safe_load(f1)
+        new = json.load(f2) if path2.endswith('.json') else yaml.safe_load(f2)
+        assert generate_diff(old, new, format_name) == f.read()
