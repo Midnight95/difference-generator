@@ -1,3 +1,7 @@
+from gendiff.formatters.stylish import make_dict_string
+from gendiff.formatters.plain import gen_plain_string
+
+
 def is_dict(item):
     return isinstance(item, dict)
 
@@ -71,3 +75,18 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
             }
 
     return result
+
+
+def generate_diff(old, new, formatter):
+
+    formatters = {
+        'stylish': make_dict_string,
+        'plain': gen_plain_string
+    }
+
+    _dict = build_diff(old, new)
+    normalize(_dict)
+
+    method = formatters.get(formatter, make_dict_string)
+
+    return method(_dict)
