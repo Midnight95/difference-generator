@@ -31,7 +31,7 @@ def gen_plain_string(_dict):
     def _iter(_dict: dict, path='') -> None:
         nonlocal result
 
-        for key, value in sorted(_dict.items()):
+        for key, value in _dict.items():
             new_path = path
             status = value.get('status')
 

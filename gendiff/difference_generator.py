@@ -1,5 +1,6 @@
 from gendiff.formatters.stylish import make_dict_string
 from gendiff.formatters.plain import gen_plain_string
+from gendiff.formatters.json import make_json
 from gendiff.parser import load_files
 
 
@@ -34,7 +35,7 @@ def get_keys(first_item, second_item) -> set:
 def build_diff(first_item: dict, second_item: dict) -> dict:
     unique = object
     result = {}
-    keys = get_keys(first_item, second_item)
+    keys = sorted(get_keys(first_item, second_item))
 
     for key in keys:
         first_value = first_item.get(key, unique)
@@ -81,7 +82,8 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
 def generate_diff(old, new, formatter):
     formatters = {
         'stylish': make_dict_string,
-        'plain': gen_plain_string
+        'plain': gen_plain_string,
+        'json': make_json
     }
 
     _dict = build_diff(*load_files(old, new))

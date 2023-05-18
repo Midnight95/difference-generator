@@ -13,7 +13,7 @@ def make_val(data, depth: int) -> str:
 def _iter(item, depth):
     result = ''
 
-    for key, val in sorted(item.items()):
+    for key, val in item.items():
         status = val.get('status')
 
         if status == 'updated':
