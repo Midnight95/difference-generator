@@ -25,10 +25,10 @@ def generate_removed(key, path):
     return f'Property \'{path}{key}\' was removed\n'
 
 
-def gen_plain_string(_dict):
+def gen_plain_string(_dict):  # noqa
     result = ''
 
-    def _iter(_dict: dict, path='') -> None:
+    def _iter(_dict: dict, path='') -> str:
         nonlocal result
 
         for key, value in _dict.items():
