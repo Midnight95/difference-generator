@@ -1,3 +1,5 @@
+install:
+	poetry install
 
 build:
 	poetry build
@@ -13,6 +15,9 @@ gendiff:
 
 test:
 	poetry run pytest
+
+test-coverage:
+
 
 lint:
 	poetry run flake8 gendiff
