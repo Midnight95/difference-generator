@@ -79,7 +79,7 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
     return result
 
 
-def generate_diff(old, new, formatter):
+def generate_diff(old, new, formatter='stylish'):
     formatters = {
         'stylish': make_dict_string,
         'plain': gen_plain_string,
