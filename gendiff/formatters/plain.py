@@ -12,13 +12,13 @@ def make_quotes(value):
 
 def generate_added(key, value, path):
     return f'Property \'{path}{key}\' was added with value: ' \
-                          f'{make_quotes(value["value"])}\n'
+        f'{make_quotes(value["value"])}\n'
 
 
 def generate_updated(key, path, value):
     return f'Property \'{path}{key}\' was updated. ' \
-              f'From {make_quotes(value["old"])} to ' \
-              f'{make_quotes(value["new"])}\n'
+        f'From {make_quotes(value["old"])} to ' \
+        f'{make_quotes(value["new"])}\n'
 
 
 def generate_removed(key, path):
