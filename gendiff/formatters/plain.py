@@ -1,56 +1,53 @@
-CHANGE_INDICATORS = ['  - ', '  + ']
-EXCEPTION_STRINGS = ['null', 'true', 'false']
-
-
 def is_complex(value):
     _complex = (dict, set, list, tuple)
     return '[complex value]' if isinstance(value, _complex) else value
 
 
 def make_quotes(value):
-    if isinstance(value, str) and value not in EXCEPTION_STRINGS:
+    if isinstance(value, str) and value not in {'null', 'true', 'false'}:
         return f"'{value}'"
     else:
         return is_complex(value)
 
 
 def generate_added(key, value, path):
-    return f"Property '{path}{key[4:]}' was added with value: " \
-                          f"{make_quotes(value)}\n"
+    return f'Property \'{path}{key}\' was added with value: ' \
+                          f'{make_quotes(value["value"])}\n'
 
 
-def generate_removed_or_removed(key, path, value, _dict):
-    added_key = CHANGE_INDICATORS[1] + key[4:]
-    if added_key in _dict:
-        return f"Property '{path}{key[4:]}' was updated. " \
-                  f"From {make_quotes(value)} to " \
-                  f"{make_quotes(_dict[added_key])}\n"
-    else:
-        return f"Property '{path}{key[4:]}' was removed\n"
+def generate_updated(key, path, value):
+    return f'Property \'{path}{key}\' was updated. ' \
+              f'From {make_quotes(value["old"])} to ' \
+              f'{make_quotes(value["new"])}\n'
 
 
-def gen_plain_string(_dict):  # noqa 901
+def generate_removed(key, path):
+    return f'Property \'{path}{key}\' was removed\n'
+
+
+def gen_plain_string(_dict):  # noqa
     result = ''
-    removed, added = CHANGE_INDICATORS
 
-    def _iter(_dict: dict, path='') -> None:
+    def _iter(_dict: dict, path='') -> str:
         nonlocal result
 
         for key, value in _dict.items():
             new_path = path
-            if key[4:] in result:
-                continue
+            status = value.get('status')
 
-            if key.startswith(added):
+            if status == 'added':
                 result += generate_added(key, value, path)
 
-            elif key.startswith(removed):
-                result += generate_removed_or_removed(key, path, value, _dict)
+            elif status == 'updated':
+                result += generate_updated(key, path, value)
 
-            elif isinstance(value, dict):
-                sub_path = f'{key[4:]}.'
+            elif status == 'removed':
+                result += generate_removed(key, path)
+
+            elif status == 'nested':
+                sub_path = f'{key}.'
                 new_path += sub_path
-                _iter(value, new_path)
+                _iter(value['value'], new_path)
 
         return result
 

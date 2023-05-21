@@ -1,21 +1,28 @@
-from gendiff.parser import parse_extensions
+from gendiff.formatters.stylish import make_dict_string
+from gendiff.formatters.plain import gen_plain_string
+from gendiff.formatters.json import make_json
+from gendiff.parser import load_files
 
 
 def is_dict(item):
     return isinstance(item, dict)
 
 
-def stringify_values(item):
+def normalize(item):
     for key, value in item.items():
         if isinstance(value, bool):
             item[key] = str(value).lower()
         elif isinstance(value, type(None)):
             item[key] = 'null'
         if is_dict(value):
-            stringify_values(value)
+            normalize(value)
 
 
 def get_keys(first_item, second_item) -> set:
+    """
+    Returns the key set of two input values
+        simultaneously checking if they are dictionaries
+    """
     if is_dict(first_item) and is_dict(second_item):
         keys = first_item.keys() | second_item.keys()
     elif is_dict(first_item):
@@ -25,57 +32,63 @@ def get_keys(first_item, second_item) -> set:
     return keys
 
 
-def add_spaces(_dict: dict) -> dict:
+def build_diff(first_item: dict, second_item: dict) -> dict:
+    unique = object
     result = {}
-    for key, value in _dict.items():
-        result[f'    {key}'] = value
-        if is_dict(value):
-            add_spaces(value)
+    keys = sorted(get_keys(first_item, second_item))
 
-    return result
-
-
-def _iter(first_item: dict, second_item: dict) -> dict: # noqa 901
-
-    result = {}
-    keys = get_keys(first_item, second_item)
-
-    for key in sorted(keys):
-        first_value = first_item.get(key) if is_dict(first_item) else None
-        second_value = second_item.get(key) if is_dict(second_item) else None
+    for key in keys:
+        first_value = first_item.get(key, unique)
+        second_value = second_item.get(key, unique)
 
         if is_dict(first_value) and is_dict(second_value):
-            result[f'    {key}'] = _iter(first_value, second_value)
+            result[key] = {
+                'value': build_diff(first_value, second_value),
+                'status': 'nested'
+            }
+
         # Only first value is present
-        elif second_value is None:
-            if is_dict(first_value):
-                result[f'  - {key}'] = add_spaces(first_value)
-            else:
-                result[f'  - {key}'] = first_value
+        elif second_value is unique:
+            result[key] = {
+                'value': first_value,
+                'status': 'removed'
+            }
+
         # Only second value is present
-        elif first_value is None:
-            if is_dict(second_value):
-                result[f'  + {key}'] = add_spaces(second_value)
-            else:
-                result[f'  + {key}'] = second_value
+        elif first_value is unique:
+            result[key] = {
+                'value': second_value,
+                'status': 'added'
+            }
+
         # Both values are present and identical
         elif first_value == second_value:
-            if is_dict(first_value):
-                result[f'    {key}'] = _iter(first_value, second_value)
-            else:
-                result[f'    {key}'] = first_value
+            result[key] = {
+                'value': first_value,
+                'status': 'unchanged'
+            }
+
         # Both values are present but different
         else:
-            result[f'  - {key}'] = first_value
-            result[f'  + {key}'] = second_value
+            result[key] = {
+                'old': first_value,
+                'new': second_value,
+                'status': 'updated'
+            }
 
     return result
 
 
-def generate_diff(first_file: str, second_file: str) -> dict:
-    first_file, second_file = parse_extensions(first_file, second_file)
+def generate_diff(old, new, formatter):
+    formatters = {
+        'stylish': make_dict_string,
+        'plain': gen_plain_string,
+        'json': make_json
+    }
 
-    stringify_values(first_file)
-    stringify_values(second_file)
+    _dict = build_diff(*load_files(old, new))
+    normalize(_dict)
 
-    return _iter(first_file, second_file)
+    method = formatters.get(formatter, make_dict_string)
+
+    return method(_dict)

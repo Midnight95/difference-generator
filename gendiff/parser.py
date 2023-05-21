@@ -20,7 +20,7 @@ def parse():
     return parser.parse_args()
 
 
-def parse_extensions(file_1, file_2):
+def load_files(file_1, file_2):
     if not (os.path.exists(file_1) and os.path.exists(file_2)):
         raise Exception('One or both files do not exist.')
 
