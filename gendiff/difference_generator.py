@@ -4,16 +4,22 @@ from gendiff.formatters.json import make_json
 from gendiff.parser import load_files
 
 
-def is_dict(item):
+def is_dict(item) -> bool:
+    """
+    Checks if provided item is a dict
+    """
     return isinstance(item, dict)
 
 
-def normalize(item):
-    for key, value in item.items():
+def normalize(_dict: dict):
+    """
+    Transforms bools and None value to string in place
+    """
+    for key, value in _dict.items():
         if isinstance(value, bool):
-            item[key] = str(value).lower()
+            _dict[key] = str(value).lower()
         elif isinstance(value, type(None)):
-            item[key] = 'null'
+            _dict[key] = 'null'
         if is_dict(value):
             normalize(value)
 
@@ -21,7 +27,7 @@ def normalize(item):
 def get_keys(first_item, second_item) -> set:
     """
     Returns the key set of two input values
-        simultaneously checking if they are dictionaries
+    simultaneously checking if they are dictionaries
     """
     if is_dict(first_item) and is_dict(second_item):
         keys = first_item.keys() | second_item.keys()
@@ -33,6 +39,10 @@ def get_keys(first_item, second_item) -> set:
 
 
 def build_diff(first_item: dict, second_item: dict) -> dict:
+    """
+    Builds and returns a dictionary that represents the differences
+    between two input dictionaries
+    """
     unique = object
     result = {}
     keys = sorted(get_keys(first_item, second_item))
@@ -79,7 +89,11 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
     return result
 
 
-def generate_diff(old, new, formatter='stylish'):
+def generate_diff(old: str, new: str, formatter='stylish') -> str:
+    """
+    Generates diff between two files and
+    returns it as a string in specified format
+    """
     formatters = {
         'stylish': make_dict_string,
         'plain': gen_plain_string,

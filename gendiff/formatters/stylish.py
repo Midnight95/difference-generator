@@ -1,4 +1,7 @@
 def make_val(data, depth: int) -> str:
+    """
+    Returns a string representation of a nested dictionary
+    """
     if not isinstance(data, dict):
         return data
 
@@ -10,10 +13,14 @@ def make_val(data, depth: int) -> str:
     return res
 
 
-def _iter(item, depth):
+def _iter(_dict: dict, depth: int) -> str:
+    """
+    Iterates over a dictionary recursively
+    and returns a formatted string representation
+    """
     result = ''
 
-    for key, val in item.items():
+    for key, val in _dict.items():
         status = val.get('status')
 
         if status == 'updated':
@@ -42,13 +49,9 @@ def _iter(item, depth):
     return result
 
 
-# def trim_whitespaces(string: str):
-#     for _ in range(string.count(' \n')):
-#         string = string.replace(' \n', '\n')
-#
-#     return string
-
-
-def make_dict_string(_dict):
+def make_dict_string(_dict: dict) -> str:
+    """
+    Returns a string representation of the differences between two dictionaries
+    """
     result = _iter(_dict, 0)
     return f'{{\n{result}}}'
