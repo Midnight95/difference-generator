@@ -64,7 +64,7 @@ def gen_plain_string(_dict):  # noqa C901
                 result += generate_added(key, value, path)
 
             elif status == 'updated':
-                result += generate_updated(key, path, value)
+                result += generate_updated(key, value, path)
 
             elif status == 'removed':
                 result += generate_removed(key, path)
