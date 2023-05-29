@@ -1,7 +1,7 @@
 from gendiff.formatters.stylish import format_stylish
 from gendiff.formatters.plain import format_plain
 from gendiff.formatters.json import format_json
-from gendiff.parser import load_files
+from gendiff.parser import load_file
 
 
 def normalize(_dict: dict):
@@ -93,7 +93,7 @@ def generate_diff(old: str, new: str, formatter='stylish') -> str:
         'json': format_json
     }
 
-    diff = build_diff(*load_files(old, new))
+    diff = build_diff(load_file(old), load_file(new))
     normalize(diff)
 
     method = formatters.get(formatter, format_stylish)
