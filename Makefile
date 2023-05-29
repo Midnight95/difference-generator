@@ -1,23 +1,23 @@
 install:
-	poetry install
+	python3 -m poetry install
 
 build:
-	poetry build
+	python3 -m poetry build
 
 publish:
-	poetry publish --dry-run
+	python3 -m poetry publish --dry-run
 
 package-install:
 	python3 -m pip install --user dist/*.whl
 
 gendiff:
-	poetry run gendiff
+	python3 -m poetry run gendiff
 
 test:
-	poetry run pytest
+	python3 -m poetry run pytest
 
 test-coverage:
-	poetry run coverage run -m pytest && poetry run coverage report  # если что не бейте
+	python3 -m poetry run coverage run -m pytest && python3 -m poetry run coverage report  # если что не бейте
 
 lint:
-	poetry run flake8 gendiff
+	python3 -m poetry run flake8 gendiff
