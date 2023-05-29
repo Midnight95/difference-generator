@@ -46,34 +46,39 @@ def generate_removed(key: str, path: str) -> str:
     return f'Property \'{path}{key}\' was removed\n'
 
 
-def format_plain(_dict):  # noqa C901
+def generate_plain_string(diff: dict, path='') -> str:
     """
     Generates a plain text string that summarizes the differences
     between two dictionaries. Returns the string output.
     """
     result = ''
 
-    def _iter(_dict: dict, path='') -> str:
-        nonlocal result
+    for key, value in diff.items():
+        new_path = path
+        status = value.get('status')
 
-        for key, value in _dict.items():
-            new_path = path
-            status = value.get('status')
+        if status == 'added':
+            result += generate_added(key, value, path)
 
-            if status == 'added':
-                result += generate_added(key, value, path)
+        elif status == 'updated':
+            result += generate_updated(key, value, path)
 
-            elif status == 'updated':
-                result += generate_updated(key, value, path)
+        elif status == 'removed':
+            result += generate_removed(key, path)
 
-            elif status == 'removed':
-                result += generate_removed(key, path)
+        elif status == 'nested':
+            sub_path = f'{key}.'
+            new_path += sub_path
+            result += generate_plain_string(value['value'], new_path)
 
-            elif status == 'nested':
-                sub_path = f'{key}.'
-                new_path += sub_path
-                _iter(value['value'], new_path)
+    return result
 
-        return result
 
-    return _iter(_dict)[:-1]
+def format_plain(diff: dict) -> str:
+    """
+    Generates a plain text string that summarizes the differences between
+    two dictionaries, without any trailing newline characters. Returns the
+    formatted string.
+    """
+    result = generate_plain_string(diff)
+    return result.rstrip('\n')
