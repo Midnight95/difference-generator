@@ -4,7 +4,7 @@ import yaml
 import os
 
 
-def parse():
+def parse_args():
     """
     Returns parsed arguments using the argparse library
     """

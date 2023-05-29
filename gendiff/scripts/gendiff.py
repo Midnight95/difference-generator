@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-from gendiff.parser import parse
+from gendiff.parser import parse_args
 from gendiff.difference_generator import generate_diff
 
 
 def main():
-    args = parse()
-    formatter = args.format
-
-    first_file, second_file = args.first_file, args.second_file
-
-    print(generate_diff(first_file, second_file, formatter))
+    args = parse_args()
+    print(
+        generate_diff(
+            args.first_file,
+            args.second_file,
+            args.format
+        )
+    )
 
 
 if __name__ == '__main__':
