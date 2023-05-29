@@ -35,8 +35,8 @@ def generate_updated(key: str, value, path: str) -> str:
     Generates a message indicating that a property has been updated
     """
     return f'Property \'{path}{key}\' was updated. ' \
-        f'From {make_quotes(value["old"])} to ' \
-        f'{make_quotes(value["new"])}\n'
+        f'From {make_quotes(value["old_value"])} to ' \
+        f'{make_quotes(value["new_value"])}\n'
 
 
 def generate_removed(key: str, path: str) -> str:

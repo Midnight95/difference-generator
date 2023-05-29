@@ -36,13 +36,12 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
     Builds and returns a dictionary that represents the differences
     between two input dictionaries
     """
-    unique = object
     result = {}
     keys = sorted(get_keys(first_item, second_item))
 
     for key in keys:
-        first_value = first_item.get(key, unique)
-        second_value = second_item.get(key, unique)
+        first_value = first_item.get(key)
+        second_value = second_item.get(key)
 
         if isinstance(first_value, dict) and isinstance(second_value, dict):
             result[key] = {
@@ -51,14 +50,14 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
             }
 
         # Only first value is present
-        elif second_value is unique:
+        elif key in first_item and key not in second_item:
             result[key] = {
                 'value': first_value,
                 'status': 'removed'
             }
 
         # Only second value is present
-        elif first_value is unique:
+        elif key in second_item and key not in first_item:
             result[key] = {
                 'value': second_value,
                 'status': 'added'
@@ -74,8 +73,8 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
         # Both values are present but different
         else:
             result[key] = {
-                'old': first_value,
-                'new': second_value,
+                'old_value': first_value,
+                'new_value': second_value,
                 'status': 'updated'
             }
 

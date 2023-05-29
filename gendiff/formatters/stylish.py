@@ -25,9 +25,9 @@ def _iter(_dict: dict, depth: int) -> str:
 
         if status == 'updated':
             result += f'{"    " * depth}{"  - "}{key}:' \
-                      f' {make_val(val["old"], depth + 1)}\n'
+                      f' {make_val(val["old_value"], depth + 1)}\n'
             result += f'{"    " * depth}{"  + "}{key}:' \
-                      f' {make_val(val["new"], depth + 1)}\n'
+                      f' {make_val(val["new_value"], depth + 1)}\n'
 
         elif status == 'nested':
             result += f'{"    " * (depth + 1)}{key}: {{\n' \
