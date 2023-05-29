@@ -49,7 +49,7 @@ def _iter(_dict: dict, depth: int) -> str:
     return result
 
 
-def make_dict_string(_dict: dict) -> str:
+def format_stylish(_dict: dict) -> str:
     """
     Returns a string representation of the differences between two dictionaries
     """

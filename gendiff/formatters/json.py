@@ -1,7 +1,7 @@
 import json
 
 
-def make_json(_dict: dict) -> str:
+def format_json(_dict: dict) -> str:
     """
     Converts a Python dictionary object into a JSON formatted string
     """

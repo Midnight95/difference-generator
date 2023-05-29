@@ -1,6 +1,6 @@
-from gendiff.formatters.stylish import make_dict_string
-from gendiff.formatters.plain import gen_plain_string
-from gendiff.formatters.json import make_json
+from gendiff.formatters.stylish import format_stylish
+from gendiff.formatters.plain import format_plain
+from gendiff.formatters.json import format_json
 from gendiff.parser import load_files
 
 
@@ -95,14 +95,14 @@ def generate_diff(old: str, new: str, formatter='stylish') -> str:
     returns it as a string in specified format
     """
     formatters = {
-        'stylish': make_dict_string,
-        'plain': gen_plain_string,
-        'json': make_json
+        'stylish': format_stylish,
+        'plain': format_plain,
+        'json': format_json
     }
 
-    _dict = build_diff(*load_files(old, new))
-    normalize(_dict)
+    diff = build_diff(*load_files(old, new))
+    normalize(diff)
 
-    method = formatters.get(formatter, make_dict_string)
+    method = formatters.get(formatter, format_stylish)
 
-    return method(_dict)
+    return method(diff)

@@ -46,7 +46,7 @@ def generate_removed(key: str, path: str) -> str:
     return f'Property \'{path}{key}\' was removed\n'
 
 
-def gen_plain_string(_dict):  # noqa C901
+def format_plain(_dict):  # noqa C901
     """
     Generates a plain text string that summarizes the differences
     between two dictionaries. Returns the string output.
