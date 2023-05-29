@@ -4,13 +4,6 @@ from gendiff.formatters.json import format_json
 from gendiff.parser import load_files
 
 
-def is_dict(item) -> bool:
-    """
-    Checks if provided item is a dict
-    """
-    return isinstance(item, dict)
-
-
 def normalize(_dict: dict):
     """
     Transforms bools and None value to string in place
@@ -20,7 +13,7 @@ def normalize(_dict: dict):
             _dict[key] = str(value).lower()
         elif isinstance(value, type(None)):
             _dict[key] = 'null'
-        if is_dict(value):
+        if isinstance(value, dict):
             normalize(value)
 
 
@@ -29,9 +22,9 @@ def get_keys(first_item, second_item) -> set:
     Returns the key set of two input values
     simultaneously checking if they are dictionaries
     """
-    if is_dict(first_item) and is_dict(second_item):
+    if isinstance(first_item, dict) and isinstance(second_item, dict):
         keys = first_item.keys() | second_item.keys()
-    elif is_dict(first_item):
+    elif isinstance(first_item, dict):
         keys = set(first_item.keys())
     else:
         keys = set(second_item.keys())
@@ -51,7 +44,7 @@ def build_diff(first_item: dict, second_item: dict) -> dict:
         first_value = first_item.get(key, unique)
         second_value = second_item.get(key, unique)
 
-        if is_dict(first_value) and is_dict(second_value):
+        if isinstance(first_value, dict) and isinstance(second_value, dict):
             result[key] = {
                 'value': build_diff(first_value, second_value),
                 'status': 'nested'
