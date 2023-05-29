@@ -1,6 +1,6 @@
-from gendiff.formatters.stylish import format_stylish
-from gendiff.formatters.plain import format_plain
-from gendiff.formatters.json import format_json
+from gendiff.formatters.format_stylish import format_stylish
+from gendiff.formatters.format_plain import format_plain
+from gendiff.formatters.format_json import format_json
 from gendiff.parser import load_file
 
 
