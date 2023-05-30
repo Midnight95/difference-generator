@@ -17,7 +17,7 @@ def make_val(data, depth: int) -> str:
     return res
 
 
-def _iter(_dict: dict, depth: int) -> str:
+def make_stylish_string(_dict: dict, depth: int) -> str:
     """
     Iterates over a dictionary recursively
     and returns a formatted string representation
@@ -35,7 +35,7 @@ def _iter(_dict: dict, depth: int) -> str:
 
         elif status == 'nested':
             result += f'{" " * (depth + 1) * INDENT}{key}: {{\n' \
-                      f'{_iter(val["value"], depth + 1)}' \
+                      f'{make_stylish_string(val["value"], depth + 1)}' \
                       f'{" " * (depth + 1) * INDENT}}}\n'
 
         elif status == 'removed':
@@ -57,5 +57,5 @@ def format_stylish(_dict: dict) -> str:
     """
     Returns a string representation of the differences between two dictionaries
     """
-    result = _iter(_dict, 0)
+    result = make_stylish_string(_dict, 0)
     return f'{{\n{result}}}'

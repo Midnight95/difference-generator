@@ -9,12 +9,13 @@ def normalize(_dict: dict):
     Transforms bools and None value to string in place
     """
     for key, value in _dict.items():
-        if isinstance(value, bool):
-            _dict[key] = str(value).lower()
-        elif isinstance(value, type(None)):
-            _dict[key] = 'null'
-        if isinstance(value, dict):
-            normalize(value)
+        match value:
+            case dict():
+                normalize(value)
+            case bool():
+                _dict[key] = str(value).lower()
+            case None:
+                _dict[key] = 'null'
 
 
 def get_keys(var_1, var_2) -> set:
@@ -24,8 +25,7 @@ def get_keys(var_1, var_2) -> set:
     """
     first_keys = set(var_1.keys()) if isinstance(var_1, dict) else set()
     second_keys = set(var_2.keys()) if isinstance(var_2, dict) else set()
-    keys = first_keys | second_keys
-    return keys
+    return first_keys | second_keys
 
 
 def build_diff(first_item: dict, second_item: dict) -> dict:
