@@ -17,17 +17,14 @@ def normalize(_dict: dict):
             normalize(value)
 
 
-def get_keys(first_item, second_item) -> set:
+def get_keys(var_1, var_2) -> set:
     """
     Returns the key set of two input values
     simultaneously checking if they are dictionaries
     """
-    if isinstance(first_item, dict) and isinstance(second_item, dict):
-        keys = first_item.keys() | second_item.keys()
-    elif isinstance(first_item, dict):
-        keys = set(first_item.keys())
-    else:
-        keys = set(second_item.keys())
+    first_keys = set(var_1.keys()) if isinstance(var_1, dict) else set()
+    second_keys = set(var_2.keys()) if isinstance(var_2, dict) else set()
+    keys = first_keys | second_keys
     return keys
 
 
