@@ -1,3 +1,6 @@
+INDENT = 4
+
+
 def make_val(data, depth: int) -> str:
     """
     Returns a string representation of a nested dictionary
@@ -7,8 +10,9 @@ def make_val(data, depth: int) -> str:
 
     res = '{'
     for key, value in data.items():
-        res += f'\n{"    " * (depth + 1)}{key}: {make_val(value, depth + 1)}'
-    res += f'\n{"    " * depth}}}'
+        res += f'\n{" " * (depth + 1) * INDENT}{key}:' \
+               f' {make_val(value, depth + 1)}'
+    res += f'\n{" " * depth * INDENT}}}'
 
     return res
 
@@ -24,26 +28,26 @@ def _iter(_dict: dict, depth: int) -> str:
         status = val.get('status')
 
         if status == 'updated':
-            result += f'{"    " * depth}{"  - "}{key}:' \
+            result += f'{" " * depth * INDENT}{"  - "}{key}:' \
                       f' {make_val(val["old_value"], depth + 1)}\n'
-            result += f'{"    " * depth}{"  + "}{key}:' \
+            result += f'{" " * depth * INDENT}{"  + "}{key}:' \
                       f' {make_val(val["new_value"], depth + 1)}\n'
 
         elif status == 'nested':
-            result += f'{"    " * (depth + 1)}{key}: {{\n' \
+            result += f'{" " * (depth + 1) * INDENT}{key}: {{\n' \
                       f'{_iter(val["value"], depth + 1)}' \
-                      f'{"    " * (depth + 1)}}}\n'
+                      f'{" " * (depth + 1) * INDENT}}}\n'
 
         elif status == 'removed':
-            result += f'{"    " * depth}{"  - "}{key}: ' \
+            result += f'{" " * depth * INDENT}{"  - "}{key}: ' \
                       f'{make_val(val["value"], depth + 1)}\n'
 
         elif status == 'added':
-            result += f'{"    " * depth}{"  + "}{key}: ' \
+            result += f'{" " * depth * INDENT}{"  + "}{key}: ' \
                       f'{make_val(val["value"], depth + 1)}\n'
 
         else:
-            result += f'{"    " * (depth + 1)}{key}: ' \
+            result += f'{" " * (depth + 1) * INDENT}{key}: ' \
                       f'{make_val(val["value"], depth + 1)}\n'
 
     return result
