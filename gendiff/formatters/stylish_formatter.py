@@ -28,9 +28,11 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
         status = val.get('status')
 
         if status == 'updated':
-            result += f'{" " * depth * INDENT}{"  - "}{key}:' \
+            result += f'{" " * depth * INDENT}' \
+                      f'{" " * (INDENT - 2) + "- "}{key}:' \
                       f' {make_val(val["old_value"], depth + 1)}\n'
-            result += f'{" " * depth * INDENT}{"  + "}{key}:' \
+            result += f'{" " * depth * INDENT}' \
+                      f'{" " * (INDENT - 2) + "+ "}{key}:' \
                       f' {make_val(val["new_value"], depth + 1)}\n'
 
         elif status == 'nested':
@@ -39,11 +41,13 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
                       f'{" " * (depth + 1) * INDENT}}}\n'
 
         elif status == 'removed':
-            result += f'{" " * depth * INDENT}{"  - "}{key}: ' \
+            result += f'{" " * depth * INDENT}' \
+                      f'{" " * (INDENT - 2) + "- "}{key}: ' \
                       f'{make_val(val["value"], depth + 1)}\n'
 
         elif status == 'added':
-            result += f'{" " * depth * INDENT}{"  + "}{key}: ' \
+            result += f'{" " * depth * INDENT}' \
+                      f'{" " * (INDENT - 2) + "+ "}{key}: ' \
                       f'{make_val(val["value"], depth + 1)}\n'
 
         else:
