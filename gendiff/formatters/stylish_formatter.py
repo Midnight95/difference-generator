@@ -58,10 +58,10 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
     return result
 
 
-def format_stylish(_dict: dict) -> str:
-    _dict = make_normalized(_dict)
+def format_stylish(diff: dict) -> str:
+    diff = make_normalized(diff)
     """
     Returns a string representation of the differences between two dictionaries
     """
-    result = make_stylish_string(_dict, 0)
+    result = make_stylish_string(diff, 0)
     return f'{{\n{result}}}'
