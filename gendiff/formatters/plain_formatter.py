@@ -1,3 +1,6 @@
+from gendiff.normalizer import make_normalized
+
+
 def make_complex(value):
     """
     Checks if a value is a complex data type
@@ -80,5 +83,6 @@ def format_plain(diff: dict) -> str:
     two dictionaries, without any trailing newline characters. Returns the
     formatted string.
     """
-    result = generate_plain_string(diff)
+    normalized_diff = make_normalized(diff)
+    result = generate_plain_string(normalized_diff)
     return result.rstrip('\n')

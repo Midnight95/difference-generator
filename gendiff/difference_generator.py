@@ -4,20 +4,6 @@ from gendiff.formatters.json_formatter import format_json
 from gendiff.parser import load_file
 
 
-def normalize(_dict: dict):
-    """
-    Transforms bools and None value to string in place
-    """
-    for key, value in _dict.items():
-        match value:
-            case dict():
-                normalize(value)
-            case bool():
-                _dict[key] = str(value).lower()
-            case None:
-                _dict[key] = 'null'
-
-
 def get_keys(var_1, var_2) -> set:
     """
     Returns the key set of two input values
@@ -90,8 +76,6 @@ def generate_diff(old: str, new: str, formatter='stylish') -> str:
     }
 
     diff = build_diff(load_file(old), load_file(new))
-    normalize(diff)
-
     method = formatters.get(formatter, format_stylish)
 
     return method(diff)

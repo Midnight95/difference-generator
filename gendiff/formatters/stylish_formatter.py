@@ -1,3 +1,4 @@
+from gendiff.normalizer import make_normalized
 INDENT = 4
 
 
@@ -58,6 +59,7 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
 
 
 def format_stylish(_dict: dict) -> str:
+    _dict = make_normalized(_dict)
     """
     Returns a string representation of the differences between two dictionaries
     """

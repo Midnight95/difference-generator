@@ -2,7 +2,7 @@
     "common": {
         "value": {
             "follow": {
-                "value": "false",
+                "value": false,
                 "status": "added"
             },
             "setting1": {
@@ -14,8 +14,8 @@
                 "status": "removed"
             },
             "setting3": {
-                "old_value": "true",
-                "new_value": "null",
+                "old_value": true,
+                "new_value": null,
                 "status": "updated"
             },
             "setting4": {
