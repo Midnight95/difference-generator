@@ -1,4 +1,4 @@
-def is_complex(value):
+def make_complex(value):
     """
     Checks if a value is a complex data type
     and returns '[complex value]' if True,
@@ -19,7 +19,7 @@ def make_quotes(value):
     if isinstance(value, str) and value not in {'null', 'true', 'false'}:
         return f"'{value}'"
     else:
-        return is_complex(value)
+        return make_complex(value)
 
 
 def generate_added(key: str, value, path: str) -> str:

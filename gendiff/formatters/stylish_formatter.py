@@ -1,7 +1,7 @@
 INDENT = 4
 
 
-def make_val(data, depth: int) -> str:
+def make_value(data, depth: int) -> str:
     """
     Returns a string representation of a nested dictionary
     """
@@ -11,7 +11,7 @@ def make_val(data, depth: int) -> str:
     res = '{'
     for key, value in data.items():
         res += f'\n{" " * (depth + 1) * INDENT}{key}:' \
-               f' {make_val(value, depth + 1)}'
+               f' {make_value(value, depth + 1)}'
     res += f'\n{" " * depth * INDENT}}}'
 
     return res
@@ -30,10 +30,10 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
         if status == 'updated':
             result += f'{" " * depth * INDENT}' \
                       f'{" " * (INDENT - 2) + "- "}{key}:' \
-                      f' {make_val(val["old_value"], depth + 1)}\n'
+                      f' {make_value(val["old_value"], depth + 1)}\n'
             result += f'{" " * depth * INDENT}' \
                       f'{" " * (INDENT - 2) + "+ "}{key}:' \
-                      f' {make_val(val["new_value"], depth + 1)}\n'
+                      f' {make_value(val["new_value"], depth + 1)}\n'
 
         elif status == 'nested':
             result += f'{" " * (depth + 1) * INDENT}{key}: {{\n' \
@@ -43,16 +43,16 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
         elif status == 'removed':
             result += f'{" " * depth * INDENT}' \
                       f'{" " * (INDENT - 2) + "- "}{key}: ' \
-                      f'{make_val(val["value"], depth + 1)}\n'
+                      f'{make_value(val["value"], depth + 1)}\n'
 
         elif status == 'added':
             result += f'{" " * depth * INDENT}' \
                       f'{" " * (INDENT - 2) + "+ "}{key}: ' \
-                      f'{make_val(val["value"], depth + 1)}\n'
+                      f'{make_value(val["value"], depth + 1)}\n'
 
         else:
             result += f'{" " * (depth + 1) * INDENT}{key}: ' \
-                      f'{make_val(val["value"], depth + 1)}\n'
+                      f'{make_value(val["value"], depth + 1)}\n'
 
     return result
 

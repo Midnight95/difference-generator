@@ -44,7 +44,7 @@ def load_file(path: str):
     if not (os.path.exists(path)):
         raise FileNotFoundError(f'File {path} does not exist!')
 
-    extension = os.path.splitext(path)[1]
+    _, extension = os.path.splitext(path)
 
     with open(path) as file:
         return parse(file, extension)
