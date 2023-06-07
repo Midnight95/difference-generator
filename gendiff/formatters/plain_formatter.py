@@ -1,6 +1,3 @@
-from gendiff.normalizer import make_normalized
-
-
 def make_complex(value):
     """
     Checks if a value is a complex data type
@@ -19,10 +16,16 @@ def make_quotes(value):
     If the value is a complex data type,
     it calls the is_complex() function to format it.
     """
-    if isinstance(value, str) and value not in {'null', 'true', 'false'}:
+    if isinstance(value, str):
         return f"'{value}'"
-    else:
-        return make_complex(value)
+
+    if isinstance(value, bool):
+        return str(value).lower()
+
+    if value is None:
+        return 'null'
+
+    return make_complex(value)
 
 
 def generate_added(key: str, value, path: str) -> str:
@@ -83,6 +86,5 @@ def format_plain(diff: dict) -> str:
     two dictionaries, without any trailing newline characters. Returns the
     formatted string.
     """
-    normalized_diff = make_normalized(diff)
-    result = generate_plain_string(normalized_diff)
+    result = generate_plain_string(diff)
     return result.rstrip('\n')

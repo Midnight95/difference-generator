@@ -1,11 +1,16 @@
-from gendiff.normalizer import make_normalized
 INDENT = 4
 
 
-def make_value(data, depth: int) -> str:
+def make_value(data, depth: int):
     """
     Returns a string representation of a nested dictionary
     """
+    if isinstance(data, bool):
+        return str(data).lower()
+
+    if data is None:
+        return 'null'
+
     if not isinstance(data, dict):
         return data
 
@@ -59,7 +64,6 @@ def make_stylish_string(_dict: dict, depth: int) -> str:
 
 
 def format_stylish(diff: dict) -> str:
-    diff = make_normalized(diff)
     """
     Returns a string representation of the differences between two dictionaries
     """

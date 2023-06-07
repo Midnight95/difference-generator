@@ -4,23 +4,13 @@ from gendiff.formatters.json_formatter import format_json
 from gendiff.parser import load_file
 
 
-def get_keys(var_1, var_2) -> set:
-    """
-    Returns the key set of two input values
-    simultaneously checking if they are dictionaries
-    """
-    first_keys = set(var_1.keys()) if isinstance(var_1, dict) else set()
-    second_keys = set(var_2.keys()) if isinstance(var_2, dict) else set()
-    return first_keys | second_keys
-
-
 def build_diff(first_item: dict, second_item: dict) -> dict:
     """
     Builds and returns a dictionary that represents the differences
     between two input dictionaries
     """
     result = {}
-    keys = sorted(get_keys(first_item, second_item))
+    keys = sorted(set(first_item.keys()) | set(second_item.keys()))
 
     for key in keys:
         first_value = first_item.get(key)
@@ -76,6 +66,6 @@ def generate_diff(old: str, new: str, formatter='stylish') -> str:
     }
 
     diff = build_diff(load_file(old), load_file(new))
-    method = formatters.get(formatter, format_stylish)
+    format = formatters.get(formatter, format_stylish)
 
-    return method(diff)
+    return format(diff)
