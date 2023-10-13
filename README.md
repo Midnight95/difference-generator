@@ -7,10 +7,10 @@
 
 ## Installation
 
-Clone repo and use Makefile or just install package with pip using `pip3 install git+https://github.com/Midnight95/python-project-50.git` command.
+Clone the repo and use Makefile or just install the package with pip using `pip3 install git+https://github.com/Midnight95/python-project-50.git` command.
 
 ## Description
-A python package that allows users to compare differences between two files.
+A Python package that allows users to compare differences between two files.
 
 Supported file formats: `yml` and `json`
 
@@ -19,7 +19,7 @@ Show help: `gendiff -h`
 
 Compare files: `gendiff -f FORMAT first_file second_file`
 
-To chose formatters use `-f --format` flag with:`plain` `stylish` `json`
+To choose formatters use `-f --format` flag with:`plain` `stylish` `json`
 
 The default formatter is `stylish`
 
